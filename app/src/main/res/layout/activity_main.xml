@@ -66,7 +66,9 @@
             android:id="@+id/txtsearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/grayborder">
+            app:iconifiedByDefault="false"
+            app:queryHint="Filter Todo"
+            >
 
         </androidx.appcompat.widget.SearchView>
 
