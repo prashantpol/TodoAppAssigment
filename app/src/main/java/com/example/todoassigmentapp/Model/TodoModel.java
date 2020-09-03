@@ -6,6 +6,23 @@ public class TodoModel {
     private String id;
     private String title;
     private Boolean completed;
+    private Boolean isExpanded;
+
+    public TodoModel(String userId, String id, String title, Boolean completed) {
+        this.userId = userId;
+        this.id = id;
+        this.title = title;
+        this.completed = completed;
+        this.isExpanded=false;
+    }
+
+    public Boolean getExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        isExpanded = expanded;
+    }
 
     public String getUserId() {
         return userId;
