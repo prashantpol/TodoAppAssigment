@@ -33,7 +33,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHold
     @NonNull
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+        //Infalte Custom Row
         LayoutInflater layoutInflater=LayoutInflater.from(parent.getContext());
         View view=layoutInflater.inflate(R.layout.customtodorow,parent,false);
         return new CustomViewHolder(view);
@@ -44,8 +44,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHold
        final TodoModel tm=todoModelList.get(position);
         if(tm!=null)
         {
-            // Limit to 20 charaters pending
-          //  holder.txttitle.setText(tm.getId()+ " - "+ tm.getTitle() + "...");
+            //Bind Each .. Here we can control each list item
             holder.txtdetails.setText( tm.getTitle());
             boolean isEnabled=tm.getExpanded();
             holder.cns_expandeddetails.setVisibility(isEnabled?View.VISIBLE:View.GONE);
@@ -69,22 +68,15 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHold
 
             });
 
-            if(holder.cns_expandeddetails.getVisibility()==View.VISIBLE)
+            if(tm.getTitle().length()>20)
             {
-                holder.txttitle.setText("");
+                holder.txttitle.setText(tm.getTitle().substring(0,20)+"...");
             }
             else
             {
-                if(tm.getTitle().length()>20)
-                {
-                    holder.txttitle.setText(tm.getTitle().substring(0,20)+"...");
-                }
-                else
-                {
-                    holder.txttitle.setText(tm.getTitle());
-                }
-
+                holder.txttitle.setText(tm.getTitle());
             }
+
             if(tm.getCompleted()==true)
             {
                 holder.img_complete.setImageResource(R.drawable.correct2);

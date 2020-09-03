@@ -6,7 +6,6 @@ import com.example.todoassigmentapp.Adapter.TodoAdapter;
 import com.example.todoassigmentapp.Model.TodoModel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class FilterTodoList  extends Filter {
@@ -25,35 +24,24 @@ public class FilterTodoList  extends Filter {
         if(todoModels.size()>0)
         {
 
-            //CHECK CONSTRAINT VALIDITY
+
             if(charSequence != null && charSequence.length() > 0)
             {
-                //CHANGE TO UPPER
+                //CHANGE TO UPPER for case Insentive Search
                 charSequence=charSequence.toString().toUpperCase();
                  List<TodoModel> filtereddata=new ArrayList<TodoModel>();
                  for (int i=0;i<todoModels.size();i++)
                 {
                     charSequence=charSequence.toString().replace(" ","");
-
-
-                    //CHECK
-                    if(((todoModels.get(i).getTitle().replace(" ","")).replace(".","")).replace("-","").toUpperCase().contains(charSequence))
+                    //Filter here and create new list
+                    if(((todoModels.get(i).getTitle().replace(" ",""))).toUpperCase().contains(charSequence))
                     {
-
                         filtereddata.add(todoModels.get(i));
                     }
 
-
-
                 }
 
-                HashSet<TodoModel> listToSet = new HashSet<TodoModel>(filtereddata);
-
-                //Creating Arraylist without duplicate values
-                List<TodoModel> listWithoutDuplicates = new ArrayList<TodoModel>(listToSet);
-
-                results.count=listWithoutDuplicates.size();
-                results.values=listWithoutDuplicates;
+                results.values=filtereddata;
             }else
             {
                 results.count=todoModels.size();
@@ -68,7 +56,7 @@ public class FilterTodoList  extends Filter {
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
         adapter.todoModelList= (List<TodoModel>) filterResults.values;
-        //REFRESH
+        //REFRESH Recyclerview
         adapter.notifyDataSetChanged();
     }
 }
