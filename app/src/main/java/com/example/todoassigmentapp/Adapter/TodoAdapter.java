@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,14 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.todoassigmentapp.Filter.FilterTodoList;
 import com.example.todoassigmentapp.Model.TodoModel;
 import com.example.todoassigmentapp.R;
 
 import java.util.List;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHolder> {
-    List<TodoModel> todoModelList;
+public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHolder> implements Filterable {
+   public List<TodoModel> todoModelList;
     Context context;
+    FilterTodoList filterTodoList;
 
     public TodoAdapter(List<TodoModel> todoModels,Context ctx)
     {
@@ -36,12 +40,12 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CustomViewHolder holder, final int position) {
        final TodoModel tm=todoModelList.get(position);
         if(tm!=null)
         {
             // Limit to 20 charaters pending
-            holder.txttitle.setText(tm.getId()+ " - "+ tm.getTitle() + "...");
+          //  holder.txttitle.setText(tm.getId()+ " - "+ tm.getTitle() + "...");
             holder.txtdetails.setText( tm.getTitle());
             boolean isEnabled=tm.getExpanded();
             holder.cns_expandeddetails.setVisibility(isEnabled?View.VISIBLE:View.GONE);
@@ -51,13 +55,45 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHold
                 public void onClick(View view) {
                     tm.setExpanded(!tm.getExpanded());
                     notifyItemChanged(position);
+                    if(tm.getExpanded()==true)
+                    {
+                        holder.img_arrow.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+                    }
+                    else
+                    {
+                        holder.img_arrow.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
+
+                    }
                 }
+
+
             });
 
+            if(holder.cns_expandeddetails.getVisibility()==View.VISIBLE)
+            {
+                holder.txttitle.setText("");
+            }
+            else
+            {
+                if(tm.getTitle().length()>20)
+                {
+                    holder.txttitle.setText(tm.getTitle().substring(0,20)+"...");
+                }
+                else
+                {
+                    holder.txttitle.setText(tm.getTitle());
+                }
+
+            }
             if(tm.getCompleted()==true)
             {
                 holder.img_complete.setImageResource(R.drawable.correct2);
             }
+            else
+            {
+                holder.img_complete.setImageResource(0);
+            }
+
 
         }
 
@@ -66,6 +102,15 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.CustomViewHold
     @Override
     public int getItemCount() {
         return todoModelList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (filterTodoList == null) {
+            filterTodoList = new FilterTodoList(todoModelList, this);
+        }
+
+        return filterTodoList;
     }
 
     public class CustomViewHolder  extends  RecyclerView.ViewHolder{

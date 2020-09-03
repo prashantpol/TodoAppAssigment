@@ -1,6 +1,7 @@
 package com.example.todoassigmentapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     int totalpages=0;
     int lastpage=0;
     PaginationTodo getitems;
+    SearchView sv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,22 @@ public class MainActivity extends AppCompatActivity {
         radcomplete=findViewById(R.id.radcomplete);
         radincomplete=findViewById(R.id.radincomplete);
         radioGroup=findViewById(R.id.radiogrp);
+        sv=findViewById(R.id.txtsearch);
+
+       sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+           @Override
+           public boolean onQueryTextSubmit(String query) {
+               return false;
+           }
+
+           @Override
+           public boolean onQueryTextChange(String newText) {
+               if(todoAdapter!=null) {
+                   todoAdapter.getFilter().filter(newText);
+               }
+               return false;
+           }
+       });
 
         LoadTodo();
 
@@ -54,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                sv.clearFocus();
+                sv.setQuery("", false);
                 currentPage=currentPage+1;
                 todoAdapter = new TodoAdapter(getitems.GetTodoList(currentPage), MainActivity.this);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
@@ -68,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
         btnprevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sv.clearFocus();
+                sv.setQuery("", false);
+
                 currentPage=currentPage-1;
                 todoAdapter = new TodoAdapter(getitems.GetTodoList(currentPage), MainActivity.this);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
@@ -190,6 +213,6 @@ public class MainActivity extends AppCompatActivity {
         todoAdapter = new TodoAdapter(getitems.GetTodoList(currentPage), this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.setAdapter(todoAdapter);
-
+        EnableDisableButton();
     }
 }
